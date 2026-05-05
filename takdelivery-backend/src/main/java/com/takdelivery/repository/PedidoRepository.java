@@ -1,12 +1,15 @@
+// repository/PedidoRepository.java
 package com.takdelivery.repository;
 
+import com.takdelivery.model.enums.EstadoPedido;
 import com.takdelivery.model.Pedido;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
-@Repository
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     List<Pedido> findByClienteId(Long clienteId);
+    List<Pedido> findByRepartidorId(Long repartidorId);
+
+    // ✅ NUEVO: consulta directa a BD sin cargar en memoria
+    boolean existsByClienteIdAndEstado(Long clienteId, EstadoPedido estado);
 }

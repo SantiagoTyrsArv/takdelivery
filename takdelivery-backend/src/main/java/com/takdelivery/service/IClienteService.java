@@ -1,36 +1,19 @@
+// service/IClienteService.java
 package com.takdelivery.service;
 
-import com.takdelivery.dto.LoginRequestDTO;
-import com.takdelivery.dto.RegistroRequestDTO;
-import com.takdelivery.model.Cliente;
-import com.takdelivery.repository.ClienteRepository;
-import org.springframework.stereotype.Service;
-import lombok.RequiredArgsConstructor;
+import com.takdelivery.dto.ClienteRequestDTO;
+import com.takdelivery.dto.ClienteResponseDTO;
+import com.takdelivery.dto.ClienteUpdateDTO;
+import com.takdelivery.dto.DireccionEntregaRequestDTO;
+import com.takdelivery.dto.DireccionEntregaResponseDTO;
+import java.util.List;
 
-@Service
-@RequiredArgsConstructor
-public class ClienteService {
-    private final ClienteRepository clienteRepository;
-
-    public Cliente registrarCliente(RegistroRequestDTO dto) {
-        if (clienteRepository.findByEmail(dto.getEmail()).isPresent()) {
-            throw new RuntimeException("El email ya está registrado");
-        }
-        Cliente cliente = new Cliente();
-        cliente.setNombre(dto.getNombre());
-        cliente.setEmail(dto.getEmail());
-        cliente.setContrasena(dto.getContrasena()); // Debería bcrypt en prod
-        cliente.setTelefono(dto.getTelefono());
-        return clienteRepository.save(cliente);
-    }
-    
-    public Cliente login(LoginRequestDTO dto) {
-        return clienteRepository.findByEmailAndContrasena(dto.getEmail(), dto.getContrasena())
-                .orElseThrow(() -> new RuntimeException("Credenciales inválidas"));
-    }
-    
-    public Cliente obtenerPorId(Long id) {
-        return clienteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
-    }
+public interface IClienteService {
+    ClienteResponseDTO registrar(ClienteRequestDTO dto);
+    ClienteResponseDTO obtenerPerfil(Long id);
+    ClienteResponseDTO actualizarPerfil(Long id, ClienteUpdateDTO dto);
+    void agregarDireccion(Long clienteId, DireccionEntregaRequestDTO dto);
+    void eliminarDireccion(Long clienteId, Long direccionId);
+    // ✅ Retorna DTO en lugar de entidad
+    List<DireccionEntregaResponseDTO> listarDirecciones(Long clienteId);
 }

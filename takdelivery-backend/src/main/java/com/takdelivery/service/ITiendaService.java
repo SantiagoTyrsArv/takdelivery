@@ -1,30 +1,16 @@
+// service/ITiendaService.java
 package com.takdelivery.service;
 
-import com.takdelivery.model.Tienda;
-import com.takdelivery.repository.TiendaRepository;
-import org.springframework.stereotype.Service;
-import lombok.RequiredArgsConstructor;
+import com.takdelivery.dto.TiendaRequestDTO;
+import com.takdelivery.dto.TiendaResponseDTO;
+import com.takdelivery.dto.TiendaUpdateDTO;
 import java.util.List;
 
-@Service
-@RequiredArgsConstructor
-public class TiendaService {
-    private final TiendaRepository tiendaRepository;
-
-    public List<Tienda> obtenerTodas() {
-        return tiendaRepository.findAll();
-    }
-
-    public Tienda obtenerPorId(Long id) {
-        return tiendaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Tienda no encontrada"));
-    }
-
-    public List<Tienda> obtenerPorCategoria(Long categoriaId) {
-        return tiendaRepository.findByCategoriasId(categoriaId);
-    }
-
-    public Tienda crear(Tienda tienda) {
-        return tiendaRepository.save(tienda);
-    }
+public interface ITiendaService {
+    List<TiendaResponseDTO> listarActivas();
+    TiendaResponseDTO obtenerPorId(Long id);
+    List<TiendaResponseDTO> listarPorCategoria(Long categoriaId);
+    TiendaResponseDTO crear(TiendaRequestDTO dto);
+    TiendaResponseDTO actualizar(Long id, TiendaRequestDTO dto);
+    TiendaResponseDTO actualizarParcial(Long id, TiendaUpdateDTO dto);
 }
